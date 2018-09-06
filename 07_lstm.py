@@ -1,9 +1,11 @@
-#Inspired by https://github.com/aymericdamien/TensorFlow-Examples/blob/master/examples/3%20-%20Neural%20Networks/recurrent_network.py
+#coding:utf-8
 import tensorflow as tf
 from tensorflow.contrib import rnn
-
 import numpy as np
 from tensorflow.examples.tutorials.mnist import input_data
+
+
+mnist =input_data.read_data_sets("./MNIST_data/", one_hot=True)
 
 # configuration
 #                        O * W + b -> 10 labels for each image, O[? 28], W[28 10], B[10]
@@ -51,7 +53,7 @@ def model(X, W, B, lstm_size):
     # Get the last output
     return tf.matmul(outputs[-1], W) + B, lstm.state_size # State size to initialize the stat
 
-mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
+
 trX, trY, teX, teY = mnist.train.images, mnist.train.labels, mnist.test.images, mnist.test.labels
 trX = trX.reshape(-1, 28, 28)
 teX = teX.reshape(-1, 28, 28)
@@ -65,7 +67,7 @@ B = init_weights([10])
 
 py_x, state_size = model(X, W, B, lstm_size)
 
-cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=py_x, labels=Y))
+cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=py_x, labels=Y))
 train_op = tf.train.RMSPropOptimizer(0.001, 0.9).minimize(cost)
 predict_op = tf.argmax(py_x, 1)
 
